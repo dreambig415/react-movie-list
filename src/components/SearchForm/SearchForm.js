@@ -9,11 +9,11 @@ const schema = yup.object({
     year: yup.string(),
 });
 
-export default function() {
+export default function({onSubmit}) {
     return (
         <Formik
             validationSchema={schema}
-            onSubmit={console.log}
+            onSubmit={onSubmit}
             initialValues={{
                 title: '',
                 type: '',
@@ -53,9 +53,10 @@ export default function() {
                                     value={values.type}
                                     onChange={handleChange}
                                 >
-                                    <option value="MOVIE">Movie</option>
-                                    <option value="SERIES">Series</option>
-                                    <option value="EPISODE">Episode</option>
+                                    <option value="">Choose...</option>
+                                    <option value="movie">Movie</option>
+                                    <option value="series">Series</option>
+                                    <option value="episode">Episode</option>
                                 </Form.Control>
                             </Form.Group>
                             
@@ -70,7 +71,7 @@ export default function() {
                                 />
                             </Form.Group>
                             <Col>
-                                <Button variant="primary" onClick={handleSubmit}>
+                                <Button variant="primary" onClick={handleSubmit} disabled={!!errors.title}>
                                     Submit
                                 </Button>
                             </Col>

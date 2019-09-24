@@ -1,18 +1,18 @@
 import axios from 'axios';
+import { BASE_URL, API_KEY } from './constants';
 
-const BASE_URL = 'http://www.omdbapi.com';
 const client = axios.create({
     baseURL: BASE_URL,
 });
 
 const api = {
     movie: {
-        list: async () => {
-            const data = await client.get('/');
+        list: async (searchTerm) => {
+            const { data } = await client.get(`/?apikey=${API_KEY}${searchTerm}`);
             return data;
         },
-        read: async () => {
-            const data = await client.get('/');
+        read: async (id) => {
+            const { data } = await client.get(`/?apikey=${API_KEY}&i=${id}`);
             return data;
         }
     }

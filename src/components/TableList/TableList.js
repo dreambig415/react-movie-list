@@ -1,7 +1,8 @@
 import React from 'react';
-import { Table, Button } from 'react-bootstrap';
+import { Table, Button, Image } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 
-export default function() {
+export default function({list}) {
     return (
         <Table striped bordered hover>
             <thead>
@@ -15,22 +16,20 @@ export default function() {
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>Mark</td>
-                    <td>Otto</td>
-                    <td>@mdo</td>
-                    <td>@mdo</td>
-                    <td><Button variant='outline-info'>Detail</Button></td>
-                </tr>
-                <tr>
-                    <td>2</td>
-                    <td>Jacob</td>
-                    <td>Thornton</td>
-                    <td>@fat</td>
-                    <td>@fat</td>
-                    <td><Button variant='outline-info'>Detail</Button></td>
-                </tr>
+                {
+                    list.map((item, index) => (
+                        <tr key={item.imdbID}>
+                            <td>{index + 1}</td>
+                            <td>{item.Title}</td>
+                            <td><Image src={item.Poster} width='100px' height='100px' /></td>
+                            <td>{item.Year}</td>
+                            <td>{item.Type}</td>
+                            <td>
+                                <Button variant='outline-info' as={Link} to={`/movie/${item.imdbID}`}>Detail</Button>
+                            </td>
+                        </tr>
+                    ))
+                }
             </tbody>
         </Table>
     )
