@@ -1,7 +1,13 @@
 import React from 'react';
+import { Row, Col, Container, Form, Button } from 'react-bootstrap';
+import SearchForm from '../../components/SearchForm';
+import TableList from '../../components/TableList';
 
 export default function() {
     return (
-        <h1>Movie List Page</h1>
+        <Container>
+            <SearchForm />
+            <TableList />
+        </Container>
     )
 }
