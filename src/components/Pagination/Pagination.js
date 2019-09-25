@@ -50,7 +50,7 @@ export default function({currentPage, totalCount, onChange}) {
                 ) : <Pagination.Ellipsis />
             }
             {
-                Array(pageCount < WINDOW_SIZE ? pageCount : WINDOW_SIZE).fill().map((item, index) => {
+                Array(pageCount < WINDOW_SIZE ? pageCount : WINDOW_SIZE + 1).fill().map((item, index) => {
                     const pageNum = pageWindow.start + index;
                     return (
                         <Pagination.Item
