@@ -1,7 +1,8 @@
-import React from 'react';
-import { Col, Form, Button } from 'react-bootstrap';
+import React, { useEffect, useState } from 'react';
+import { Col, Form, Button, Spinner } from 'react-bootstrap';
 import { Formik } from 'formik';
 import * as yup from 'yup';
+import { getItem } from '../../util/localStorage';
 
 const schema = yup.object({
     title: yup.string().required(),
@@ -10,14 +11,31 @@ const schema = yup.object({
 });
 
 export default function({onSubmit}) {
+    const [savedValues, setSavedValues] = useState({});
+    const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        setLoading(true);
+        let values = getItem('values');
+        console.log(values);
+        if (values) {
+            setSavedValues(values);
+            console.log(savedValues);
+        }
+        setLoading(false);
+    }, [])
     return (
+        <>
+        {
+            loading ? (<Spinner animation='border' variant='primary' />) : (
         <Formik
+            enableReinitialize={true}
             validationSchema={schema}
             onSubmit={onSubmit}
             initialValues={{
-                title: '',
-                type: '',
-                year: '',
+                title: savedValues.title || '',
+                type: savedValues.type || '',
+                year: savedValues.year || '',
             }}
         >
             {({
@@ -80,5 +98,9 @@ export default function({onSubmit}) {
                 </>
             )}
         </Formik>
+
+            )
+        }
+        </>
     )
 }
