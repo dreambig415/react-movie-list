@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Container } from 'react-bootstrap';
+import { Container, Spinner } from 'react-bootstrap';
 import api from '../../util/api';
 import SearchForm from '../../components/SearchForm';
 import TableList from '../../components/TableList';
@@ -12,6 +12,7 @@ export default function() {
     const [list, setList] = useState([]);
     const [count, setCount] = useState(0);
     const [currentPage, setCurrentPage] = useState(1);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         let savedList = getItem('list');
@@ -28,27 +29,42 @@ export default function() {
         let values = getItem('values');
         if (values) {
             let searchString = makeSearchString(values);
-            (async () => {
-                const { Search, totalResults } = await api.movie.list({searchString, currentPage});
-                setCount(totalResults);
-                setItem('list', Search);
-                if (Search) {
-                    setList(Search);
-                } else {
-                    setList([]);
-                }
-            })();
+            try {
+                setLoading(true);
+                (async () => {
+                    const { Search, totalResults } = await api.movie.list({searchString, currentPage});
+                    setCount(totalResults);
+                    setItem('list', Search);
+                    if (Search) {
+                        setList(Search);
+                    } else {
+                        setList([]);
+                    }
+                })();
+                setLoading(false);
+            } catch (err) {
+                console.warn("Error in fetching result", err.message);
+            } finally {
+                setLoading(false);
+            }
         }
     }, [currentPage]);
 
     const handleSubmit = async (values) => {
         let searchString = makeSearchString(values);
-        const { Search, totalResults } = await api.movie.list({searchString, currentPage});
-        console.log("totalResult", totalResults);
-        setCount(totalResults);
-        setItem('values', values);
-        setItem('list', Search);
-        setList(Search);
+        try {
+            setLoading(true);
+            const { Search, totalResults } = await api.movie.list({searchString, currentPage: 1});
+            setCount(totalResults || 0);
+            setItem('values', Search ? values : '');
+            setItem('list', Search || []);
+            setList(Search || []);
+            setLoading(false);
+        } catch (err) {
+            console.warn("Error in fecthing list", err.message);
+        } finally {
+            setLoading(false);
+        }
     }
     
     const handlePageChange = async (pageNum) => {
@@ -62,17 +78,24 @@ export default function() {
                 onSubmit={handleSubmit}
             />
             <Heading size='sm'>Search Result</Heading>
-            { 
-                list.length ? (
+            {
+                loading ? <Spinner animation="border" variant="primary" /> :
+                (
                     <>
-                        <TableList list={list} /> 
-                        <Pagination
-                            currentPage={currentPage} 
-                            totalCount={count}
-                            onChange={handlePageChange}
-                        />
+                    { 
+                        list.length ? (
+                            <>
+                                <TableList list={list} /> 
+                                <Pagination
+                                    currentPage={currentPage} 
+                                    totalCount={count}
+                                    onChange={handlePageChange}
+                                />
+                            </>
+                        ) : <Heading size='xs'>No Search Result</Heading>
+                    }
                     </>
-                ) : <Heading size='xs'>No Search Result</Heading>
+                )
             }
         </Container>
     )

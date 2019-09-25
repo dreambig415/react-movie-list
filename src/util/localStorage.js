@@ -1,5 +1,9 @@
 export const getItem = (keyName) =>  {
-    return JSON.parse(localStorage.getItem(keyName));
+    try {
+        return JSON.parse(localStorage.getItem(keyName));
+    } catch (error) {
+        console.warn("There are some errors in parsing JSON", error.message);
+    }
 };
 
 export const setItem = (keyName, keyValue) => {
@@ -7,7 +11,7 @@ export const setItem = (keyName, keyValue) => {
     try {
         return localStorage.setItem(keyName, value);
     } catch (error) {
-        throw error;
+        console.warn("There are some errors in parsing JSON", error.message);
     }
 }
 
