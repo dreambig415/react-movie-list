@@ -7,7 +7,6 @@ export const setItem = (keyName, keyValue) => {
     try {
         return localStorage.setItem(keyName, value);
     } catch (error) {
-        console.log("error", error);
         throw error;
     }
 }

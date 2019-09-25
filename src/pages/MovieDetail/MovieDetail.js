@@ -10,12 +10,11 @@ function MovieDetail ({match}) {
     const fetchMovie = async () => {
         const { id } = match.params;
         const data = await api.movie.read(id);
-        console.log(data);
         setMovie(data);
     }
 
     useEffect(() => {
-        fetchMovie();
+        fetchMovie(); // eslint-disable-next-line
     }, []);
 
     return (

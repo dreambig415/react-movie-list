@@ -1,7 +1,6 @@
 export function makeSearchString(values) {
     let searchString = '';
     for (let [key, val] of Object.entries(values)) {
-        console.log(key, val);
         if (!val) {
             continue;
         } 
