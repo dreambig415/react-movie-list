@@ -3,7 +3,7 @@ import { Table, Button, Image } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import './style.css';
 
-export default function({list}) {
+export default function({ list }) {
     return (
         <Table striped bordered hover className="movie-list">
             <thead>

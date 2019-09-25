@@ -6,30 +6,39 @@ import TableList from '../../components/TableList';
 import Pagination from '../../components/Pagination';
 import { makeSearchString } from '../../util/helpers';
 import { getItem, setItem } from '../../util/localStorage';
+import Heading from '../../components/Heading';
 
 export default function() {
     const [list, setList] = useState([]);
     const [count, setCount] = useState(0);
     const [currentPage, setCurrentPage] = useState(1);
-    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         let savedList = getItem('list');
-        console.log('savedList', savedList);
+        let savedCurrentPage = getItem('currentPage');
         if (savedList) {
             setList(savedList);
+        }
+        if (savedCurrentPage) {
+            setCurrentPage(savedCurrentPage);
         }
     }, []);
 
     useEffect(() => {
         let values = getItem('values');
-        let searchString = makeSearchString(values);
-        (async () => {
-            const { Search, totalResults } = await api.movie.list({searchString, currentPage});
-            setCount(totalResults);
-            setItem('list', Search);
-            setList(Search);
-        })();
+        if (values) {
+            let searchString = makeSearchString(values);
+            (async () => {
+                const { Search, totalResults } = await api.movie.list({searchString, currentPage});
+                setCount(totalResults);
+                setItem('list', Search);
+                if (Search) {
+                    setList(Search);
+                } else {
+                    setList([]);
+                }
+            })();
+        }
     }, [currentPage]);
 
     const handleSubmit = async (values) => {
@@ -43,7 +52,7 @@ export default function() {
     }
     
     const handlePageChange = async (pageNum) => {
-        console.log("Current Page Number", pageNum);
+        setItem('currentPage', pageNum);
         setCurrentPage(pageNum);
     }
 
@@ -52,12 +61,19 @@ export default function() {
             <SearchForm
                 onSubmit={handleSubmit}
             />
-            <TableList list={list} /> 
-            <Pagination
-                currentPage={currentPage} 
-                totalCount={count}
-                onChange={handlePageChange}
-            />
+            <Heading size='sm'>Search Result</Heading>
+            { 
+                list.length ? (
+                    <>
+                        <TableList list={list} /> 
+                        <Pagination
+                            currentPage={currentPage} 
+                            totalCount={count}
+                            onChange={handlePageChange}
+                        />
+                    </>
+                ) : <Heading size='xs'>No Search Result</Heading>
+            }
         </Container>
     )
 }

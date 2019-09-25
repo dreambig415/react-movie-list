@@ -15,9 +15,17 @@ export default function({currentPage, totalCount, onChange}) {
         onPageChange(currentPage + 1)();
     }
 
+    const onFrist = () => {
+        onPageChange(1)();
+    }
+
+    const onLast = () => {
+        onPageChange(pageCount)();
+    }
+
     return (
-        <Pagination>
-            <Pagination.First />
+        <Pagination className="justify-content-md-center">
+            <Pagination.First disabled={currentPage === 1} onClick={onFrist} />
             <Pagination.Prev disabled={currentPage === 1} onClick={onPrev} />
             {
                 Array(pageCount).fill().map((item, index) => {
@@ -34,7 +42,7 @@ export default function({currentPage, totalCount, onChange}) {
                 })
             }  
             <Pagination.Next disabled={currentPage === pageCount} onClick={onNext} />
-            <Pagination.Last />
+            <Pagination.Last disabled={currentPage === pageCount} onClick={onLast}/>
         </Pagination>  
     )
 }
