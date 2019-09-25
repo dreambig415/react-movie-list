@@ -1,10 +1,11 @@
 import React from 'react';
 import { Table, Button, Image } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import './style.css';
 
 export default function({list}) {
     return (
-        <Table striped bordered hover>
+        <Table striped bordered hover className="movie-list">
             <thead>
                 <tr>
                     <th>ID</th>
@@ -21,7 +22,7 @@ export default function({list}) {
                         <tr key={item.imdbID}>
                             <td>{index + 1}</td>
                             <td>{item.Title}</td>
-                            <td><Image src={item.Poster} width='100px' height='100px' /></td>
+                            <td><Image src={item.Poster} width='100px' height='100px' alt="No Image!" /></td>
                             <td>{item.Year}</td>
                             <td>{item.Type}</td>
                             <td>

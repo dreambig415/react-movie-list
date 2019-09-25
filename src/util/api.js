@@ -7,8 +7,8 @@ const client = axios.create({
 
 const api = {
     movie: {
-        list: async (searchTerm) => {
-            const { data } = await client.get(`/?apikey=${API_KEY}${searchTerm}`);
+        list: async ({searchString, currentPage = 1}) => {
+            const { data } = await client.get(`/?apikey=${API_KEY}${searchString}&page=${currentPage}`);
             return data;
         },
         read: async (id) => {
